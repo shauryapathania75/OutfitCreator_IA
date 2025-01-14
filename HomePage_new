@@ -1,0 +1,81 @@
+import tkinter as tk
+from tkinter import font as tkfont
+from PIL import Image, ImageTk  # You'll need to install pillow: pip install pillow
+
+class WelcomeScreen:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.title("Virtual Wardrobe")
+
+        # Set window size
+        self.root.geometry("800x600")
+
+        # Create a frame to hold everything
+        self.main_frame = tk.Frame(self.root)
+        self.main_frame.pack(fill="both", expand=True)
+
+        # Background color (temporary - you can replace with an image)
+        self.main_frame.configure(bg="#E6E6FA")  # Light lavender background
+
+        # Welcome text
+        welcome_font = tkfont.Font(family="Century Gothic", size=36, weight="bold")
+        welcome_label = tk.Label(
+            self.main_frame,
+            text="Welcome User",
+            font=welcome_font,
+            bg="#E6E6FA",
+            fg="#4B0082"  # Dark indigo text
+        )
+        welcome_label.pack(pady=100)
+
+        # Create stylish button
+        button_font = tkfont.Font(family="Century Gothic", size=14)
+        enter_button = tk.Button(
+            self.main_frame,
+            text="Click to Enter Wardrobe",
+            font=button_font,
+            command=self.enter_wardrobe,
+            bg="#9370DB",  # Medium purple
+            fg="white",
+            relief="flat",
+            padx=20,
+            pady=10,
+            cursor="hand2"
+        )
+        enter_button.pack(pady=20)
+
+        # Add hover effect to button
+        enter_button.bind("<Enter>", lambda e: enter_button.configure(bg="#8A2BE2"))
+        enter_button.bind("<Leave>", lambda e: enter_button.configure(bg="#9370DB"))
+
+        self.root.mainloop()
+
+    def enter_wardrobe(self):
+        # This function will be called when the button is clicked
+        # You can add code here to open your closet screen
+        print("Opening wardrobe...")
+        # self.root.destroy()  # Uncomment this when you want to close welcome screen
+        # Add code to open your closet screen here
+
+# Run the application
+if __name__ == "__main__":
+    app = WelcomeScreen()
+To make this even better, here are some suggestions you can add:
+
+Add a background image:
+# Add this after creating main_frame
+bg_image = Image.open("home_background.jpg")  # You'll need to provide an image
+bg_image = bg_image.resize((800, 600), Image.Resampling.LANCZOS)
+bg_photo = ImageTk.PhotoImage(bg_image)
+bg_label = tk.Label(self.main_frame, image=bg_photo)
+bg_label.image = bg_photo  # Keep a reference!
+bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+Add animation:
+# Add this to the __init__ method
+def animate_welcome():
+    welcome_label.place(relx=0.5, rely=0.3, anchor="center")
+    welcome_label.configure(alpha=0)
+    for i in range(100):
+        self.root.after(i*20, lambda a=i: welcome_label.configure(alpha=a/100))
+
+self.root.after(100, animate_welcome)
