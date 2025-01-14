@@ -1,0 +1,35 @@
+import tkinter as tk
+from tkinter import Canvas
+
+def create_closet():
+    # Create the main window
+    root = tk.Tk()
+    root.title("Closet Background")
+
+    # Create canvas
+    canvas = Canvas(root, width=800, height=600, bg='#F5F5F5')  # Light gray background
+    canvas.pack()
+
+    # Draw closet frame
+    # Main closet body
+    canvas.create_rectangle(50, 50, 750, 550, fill='#8B7355', outline='#6B5B45', width=3)  # Wood color
+
+    # Draw shelves
+    for y in range(150, 551, 100):
+        canvas.create_line(50, y, 750, y, fill='#6B5B45', width=3)
+
+    # Draw vertical dividers
+    canvas.create_line(400, 50, 400, 550, fill='#6B5B45', width=3)
+
+    # Add wood grain effect (simple lines)
+    for i in range(75, 750, 30):
+        canvas.create_line(i, 50, i, 550, fill='#9B8365', width=1)
+
+    # Add shadows for depth
+    canvas.create_rectangle(45, 45, 55, 555, fill='#4A3B2F', outline='')
+    canvas.create_rectangle(45, 45, 755, 55, fill='#4A3B2F', outline='')
+
+    root.mainloop()
+
+# Run the program
+create_closet()
