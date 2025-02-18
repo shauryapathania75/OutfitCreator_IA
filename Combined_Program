@@ -1,0 +1,147 @@
+import tkinter as tk
+from tkinter import ttk
+import json
+
+class WardrobeApp(tk.Tk):
+    def __init__(self):
+        super().__init__()
+
+        self.title("Online Wardrobe")
+        self.geometry("400x500")
+
+        # Dictionary to store selections
+        self.selections = {
+            'hats': {'color': '', 'size': ''},
+            'shirts': {'color': '', 'size': ''},
+            'pants': {'color': '', 'size': ''},
+            'shoes': {'color': '', 'size': ''},
+            'accessories': {'color': '', 'size': ''}
+        }
+
+        # Create container for frames
+        self.container = tk.Frame(self)
+        self.container.pack(fill='both', expand=True)
+
+        # Dictionary to store frames
+        self.frames = {}
+
+        # Create all pages
+        self.create_frames()
+
+        # Show welcome page first
+        self.show_frame("WelcomePage")
+
+    def create_frames(self):
+        # Welcome page
+        welcome = WelcomePage(self.container, self)
+        self.frames["WelcomePage"] = welcome
+        welcome.grid(row=0, column=0, sticky="nsew")
+
+        # Selection pages
+        for item in ['hats', 'shirts', 'pants', 'shoes', 'accessories']:
+            frame = SelectionPage(self.container, self, item)
+            self.frames[f"{item.capitalize()}Page"] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        # Wardrobe page
+        wardrobe = WardrobePage(self.container, self)
+        self.frames["WardrobePage"] = wardrobe
+        wardrobe.grid(row=0, column=0, sticky="nsew")
+
+    def show_frame(self, page_name):
+        frame = self.frames[page_name]
+        frame.tkraise()
+
+class WelcomePage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+
+        # Welcome label
+        label = tk.Label(self, text="Welcome User!", font=("Arial", 24))
+        label.pack(pady=20)
+
+        # Buttons for each category
+        categories = ['hats', 'shirts', 'pants', 'shoes', 'accessories']
+        for category in categories:
+            btn = tk.Button(self, 
+                          text=category.capitalize(),
+                          command=lambda c=category: controller.show_frame(f"{c.capitalize()}Page"))
+            btn.pack(pady=10)
+
+class SelectionPage(tk.Frame):
+    def __init__(self, parent, controller, category):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.category = category
+
+        # Title
+        label = tk.Label(self, text=f"Select {category.capitalize()}", font=("Arial", 18))
+        label.pack(pady=20)
+
+        # Color selection
+        colors = ['Red', 'Blue', 'Green', 'Black', 'White']
+        tk.Label(self, text="Color:").pack()
+        self.color_var = tk.StringVar()
+        color_menu = ttk.Combobox(self, textvariable=self.color_var, values=colors)
+        color_menu.pack(pady=10)
+
+        # Size selection
+        sizes = ['Small', 'Medium', 'Large']
+        tk.Label(self, text="Size:").pack()
+        self.size_var = tk.StringVar()
+        size_menu = ttk.Combobox(self, textvariable=self.size_var, values=sizes)
+        size_menu.pack(pady=10)
+
+        # Next button
+        next_btn = tk.Button(self, text="Next", command=self.save_and_next)
+        next_btn.pack(pady=20)
+
+    def save_and_next(self):
+        # Save selections
+        self.controller.selections[self.category]['color'] = self.color_var.get()
+        self.controller.selections[self.category]['size'] = self.size_var.get()
+
+        # Determine next page
+        categories = ['hats', 'shirts', 'pants', 'shoes', 'accessories']
+        current_index = categories.index(self.category)
+
+        if current_index < len(categories) - 1:
+            next_category = categories[current_index + 1]
+            self.controller.show_frame(f"{next_category.capitalize()}Page")
+        else:
+            self.controller.show_frame("WardrobePage")
+
+class WardrobePage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+
+        label = tk.Label(self, text="Your Wardrobe", font=("Arial", 18))
+        label.pack(pady=20)
+
+        # Display selections button
+        self.display_btn = tk.Button(self, text="Display Selections", command=self.display_selections)
+        self.display_btn.pack(pady=10)
+
+        # Save button
+        save_btn = tk.Button(self, text="Save Wardrobe", command=self.save_wardrobe)
+        save_btn.pack(pady=10)
+
+        # Display area
+        self.display_area = tk.Text(self, height=10, width=40)
+        self.display_area.pack(pady=10)
+
+    def display_selections(self):
+        self.display_area.delete(1.0, tk.END)
+        for item, details in self.controller.selections.items():
+            self.display_area.insert(tk.END, 
+                f"{item.capitalize()}:\nColor: {details['color']}\nSize: {details['size']}\n\n")
+
+    def save_wardrobe(self):
+        with open('wardrobe.json', 'w') as f:
+            json.dump(self.controller.selections, f)
+
+if __name__ == "__main__":
+    app = WardrobeApp()
+    app.mainloop()
