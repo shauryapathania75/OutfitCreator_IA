@@ -1,0 +1,42 @@
+class SelectionPage(tk.Frame):
+    def __init__(self, parent, controller, category):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.category = category
+
+        # Title
+        label = tk.Label(self, text=f"Select {category.capitalize()}", font=("Arial", 18))
+        label.pack(pady=20)
+
+        # Color selection
+        colors = ['Red', 'Blue', 'Green', 'Black', 'White']
+        tk.Label(self, text="Color:").pack()
+        self.color_var = tk.StringVar()
+        color_menu = ttk.Combobox(self, textvariable=self.color_var, values=colors)
+        color_menu.pack(pady=10)
+
+        # Size selection
+        sizes = ['Small', 'Medium', 'Large']
+        tk.Label(self, text="Size:").pack()
+        self.size_var = tk.StringVar()
+        size_menu = ttk.Combobox(self, textvariable=self.size_var, values=sizes)
+        size_menu.pack(pady=10)
+
+        # Next button
+        next_btn = tk.Button(self, text="Next", command=self.save_and_next)
+        next_btn.pack(pady=20)
+
+    def save_and_next(self):
+        # Save selections
+        self.controller.selections[self.category]['color'] = self.color_var.get()
+        self.controller.selections[self.category]['size'] = self.size_var.get()
+
+        # Determine next page
+        categories = ['hats', 'shirts', 'pants', 'shoes', 'accessories']
+        current_index = categories.index(self.category)
+
+        if current_index < len(categories) - 1:
+            next_category = categories[current_index + 1]
+            self.controller.show_frame(f"{next_category.capitalize()}Page")
+        else:
+            self.controller.show_frame("WardrobePage")
