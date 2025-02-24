@@ -10,151 +10,141 @@ class CustomStyle:
     BUTTON_BG = "#4a90e2"
     BUTTON_FG = "white"
     FONT_FAMILY = "Helvetica"
+    SCALE = 1.5
 
 class ClothingDrawer:
     @staticmethod
     def draw_item(category, color, screen):
         t = turtle.RawTurtle(screen)
-        t.speed(0)  # Fastest speed
-        t.hideturtle()  # Hide the turtle cursor
+        t.speed(0)
+        t.hideturtle()
         t.pensize(2)
         t.color(color.lower())
-
-        # Clear previous drawings
         t.clear()
-
-        # Center the drawing
         t.penup()
         t.goto(0, 0)
         t.pendown()
-
-        if category == 'hats':
-            ClothingDrawer.draw_hat(t)
-        elif category == 'shirts':
-            ClothingDrawer.draw_shirt(t)
-        elif category == 'pants':
-            ClothingDrawer.draw_pants(t)
-        elif category == 'shoes':
-            ClothingDrawer.draw_shoes(t)
-        elif category == 'accessories':
-            ClothingDrawer.draw_accessory(t)
+        if category == 'hats': ClothingDrawer.draw_hat(t)
+        elif category == 'shirts': ClothingDrawer.draw_shirt(t)
+        elif category == 'pants': ClothingDrawer.draw_pants(t)
+        elif category == 'shoes': ClothingDrawer.draw_shoes(t)
+        elif category == 'accessories': ClothingDrawer.draw_accessory(t)
 
     @staticmethod
     def draw_hat(t):
+        scale = CustomStyle.SCALE
         t.penup()
-        t.goto(-50, 50)
+        t.goto(-50 * scale, 50 * scale)
         t.pendown()
         t.begin_fill()
-        # Draw brim
-        t.forward(100)
-        # Draw crown
+        t.forward(100 * scale)
         t.right(90)
-        t.forward(30)
+        t.forward(30 * scale)
         t.right(90)
-        t.forward(100)
+        t.forward(100 * scale)
         t.right(90)
-        t.forward(30)
+        t.forward(30 * scale)
         t.end_fill()
 
     @staticmethod
     def draw_shirt(t):
+        scale = CustomStyle.SCALE
         t.penup()
-        t.goto(-40, 30)
+        t.goto(-40 * scale, 30 * scale)
         t.pendown()
         t.begin_fill()
-        # Draw body
-        t.forward(80)
+        t.forward(80 * scale)
         t.right(90)
-        t.forward(60)
+        t.forward(60 * scale)
         t.right(90)
-        t.forward(80)
+        t.forward(80 * scale)
         t.right(90)
-        t.forward(60)
-        # Draw sleeves
+        t.forward(60 * scale)
         t.penup()
-        t.goto(-40, 10)
+        t.goto(-40 * scale, 10 * scale)
         t.pendown()
         t.right(45)
-        t.forward(30)
-        t.backward(30)
+        t.forward(30 * scale)
+        t.backward(30 * scale)
         t.left(45)
         t.penup()
-        t.goto(40, 10)
+        t.goto(40 * scale, 10 * scale)
         t.pendown()
         t.left(45)
-        t.forward(30)
+        t.forward(30 * scale)
         t.end_fill()
 
     @staticmethod
     def draw_pants(t):
+        scale = CustomStyle.SCALE
         t.penup()
-        t.goto(-30, 0)
+        t.goto(-30 * scale, 0)
         t.pendown()
         t.begin_fill()
-        # First leg
-        t.forward(20)
+        t.forward(20 * scale)
         t.right(90)
-        t.forward(60)
+        t.forward(60 * scale)
         t.right(90)
-        t.forward(20)
+        t.forward(20 * scale)
         t.right(90)
-        t.forward(60)
-        # Second leg
+        t.forward(60 * scale)
         t.penup()
-        t.goto(10, 0)
+        t.goto(10 * scale, 0)
         t.pendown()
         t.left(90)
-        t.forward(20)
+        t.forward(20 * scale)
         t.right(90)
-        t.forward(60)
+        t.forward(60 * scale)
         t.right(90)
-        t.forward(20)
+        t.forward(20 * scale)
         t.right(90)
-        t.forward(60)
+        t.forward(60 * scale)
         t.end_fill()
 
     @staticmethod
     def draw_shoes(t):
-        for _ in range(2):  # Draw two shoes
+        scale = CustomStyle.SCALE
+        for i in range(2):
             t.penup()
-            t.goto(-50 + (_ * 60), -50)  # Offset second shoe
+            t.goto((-50 + (i * 60)) * scale, -50 * scale)
             t.pendown()
             t.begin_fill()
-            t.forward(30)
+            t.forward(30 * scale)
             t.right(90)
-            t.forward(15)
+            t.forward(15 * scale)
             t.right(90)
-            t.forward(40)  # Longer than top for toe
+            t.forward(40 * scale)
             t.right(90)
-            t.forward(15)
+            t.forward(15 * scale)
             t.right(90)
             t.end_fill()
 
     @staticmethod
     def draw_accessory(t):
+        scale = CustomStyle.SCALE
         t.penup()
         t.goto(0, 0)
         t.pendown()
         t.begin_fill()
-        t.circle(20)  # Draw a simple necklace
+        t.circle(20 * scale)
         t.end_fill()
 
 class WardrobeApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("My Wardrobe Collection")
-        self.geometry("600x800")
+        self.geometry("1024x768")
         self.configure(bg=CustomStyle.BG_COLOR)
-
-        # Create the turtle canvas
-        self.canvas = tk.Canvas(self, width=400, height=400)
-        self.canvas.pack(pady=20)
-
-        # Create turtle screen
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.main_frame = tk.Frame(self, bg=CustomStyle.BG_COLOR)
+        self.main_frame.grid(row=0, column=0, sticky="nsew")
+        self.main_frame.grid_rowconfigure(0, weight=1)
+        self.main_frame.grid_columnconfigure(0, weight=1)
+        self.canvas = tk.Canvas(self.main_frame, width=800, height=600)
+        self.canvas.grid(row=0, column=0, pady=20, padx=20)
         self.screen = turtle.TurtleScreen(self.canvas)
         self.screen.bgcolor(CustomStyle.BG_COLOR)
-
-        # Initialize selections dictionary
         self.selections = {
             'hats': {'color': '', 'size': ''},
             'shirts': {'color': '', 'size': ''},
@@ -162,26 +152,22 @@ class WardrobeApp(tk.Tk):
             'shoes': {'color': '', 'size': ''},
             'accessories': {'color': '', 'size': ''}
         }
-
-        # Create main container
-        self.container = tk.Frame(self, bg=CustomStyle.BG_COLOR)
-        self.container.pack(fill='both', expand=True)
-
-        # Create and store frames
+        self.container = tk.Frame(self.main_frame, bg=CustomStyle.BG_COLOR)
+        self.container.grid(row=1, column=0, sticky="nsew")
         self.frames = {}
         self.create_frames()
         self.show_frame("WelcomePage")
 
     def create_frames(self):
+        self.container.grid_rowconfigure(0, weight=1)
+        self.container.grid_columnconfigure(0, weight=1)
         welcome = WelcomePage(self.container, self)
         self.frames["WelcomePage"] = welcome
         welcome.grid(row=0, column=0, sticky="nsew")
-
         for item in ['hats', 'shirts', 'pants', 'shoes', 'accessories']:
             frame = SelectionPage(self.container, self, item)
             self.frames[f"{item.capitalize()}Page"] = frame
             frame.grid(row=0, column=0, sticky="nsew")
-
         wardrobe = WardrobePage(self.container, self)
         self.frames["WardrobePage"] = wardrobe
         wardrobe.grid(row=0, column=0, sticky="nsew")
@@ -196,42 +182,25 @@ class SelectionPage(tk.Frame):
         tk.Frame.__init__(self, parent, bg=CustomStyle.BG_COLOR)
         self.controller = controller
         self.category = category
-
-        # Title
-        title = tk.Label(self,
-                        text=f"Select {category.capitalize()}",
-                        font=(CustomStyle.FONT_FAMILY, 18),
-                        bg=CustomStyle.BG_COLOR)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        content_frame = tk.Frame(self, bg=CustomStyle.BG_COLOR)
+        content_frame.grid(row=0, column=0)
+        title = tk.Label(content_frame, text=f"Select {category.capitalize()}", font=(CustomStyle.FONT_FAMILY, 24), bg=CustomStyle.BG_COLOR)
         title.pack(pady=20)
-
-        # Color selection
         colors = ['Red', 'Blue', 'Green', 'Black', 'Purple']
         self.color_var = tk.StringVar()
-        tk.Label(self, text="Color:", bg=CustomStyle.BG_COLOR).pack()
-        color_menu = ttk.Combobox(self, textvariable=self.color_var, values=colors)
+        tk.Label(content_frame, text="Color:", font=(CustomStyle.FONT_FAMILY, 14), bg=CustomStyle.BG_COLOR).pack()
+        color_menu = ttk.Combobox(content_frame, textvariable=self.color_var, values=colors, width=20)
         color_menu.pack(pady=10)
-
-        # Preview button
-        preview_btn = tk.Button(self,
-                              text="Preview Item",
-                              command=self.preview_item,
-                              bg=CustomStyle.BUTTON_BG,
-                              fg=CustomStyle.BUTTON_FG)
-        preview_btn.pack(pady=10)
-
-        # Size selection
+        preview_btn = tk.Button(content_frame, text="Preview Item", command=self.preview_item, bg=CustomStyle.BUTTON_BG, fg=CustomStyle.BUTTON_FG, font=(CustomStyle.FONT_FAMILY, 12), width=15)
+        preview_btn.pack(pady=20)
         sizes = ['Small', 'Medium', 'Large']
         self.size_var = tk.StringVar()
-        tk.Label(self, text="Size:", bg=CustomStyle.BG_COLOR).pack()
-        size_menu = ttk.Combobox(self, textvariable=self.size_var, values=sizes)
+        tk.Label(content_frame, text="Size:", font=(CustomStyle.FONT_FAMILY, 14), bg=CustomStyle.BG_COLOR).pack()
+        size_menu = ttk.Combobox(content_frame, textvariable=self.size_var, values=sizes, width=20)
         size_menu.pack(pady=10)
-
-        # Next button
-        next_btn = tk.Button(self,
-                           text="Next",
-                           command=self.save_and_next,
-                           bg=CustomStyle.BUTTON_BG,
-                           fg=CustomStyle.BUTTON_FG)
+        next_btn = tk.Button(content_frame, text="Next", command=self.save_and_next, bg=CustomStyle.BUTTON_BG, fg=CustomStyle.BUTTON_FG, font=(CustomStyle.FONT_FAMILY, 12), width=15)
         next_btn.pack(pady=20)
 
     def preview_item(self):
@@ -242,10 +211,8 @@ class SelectionPage(tk.Frame):
     def save_and_next(self):
         self.controller.selections[self.category]['color'] = self.color_var.get()
         self.controller.selections[self.category]['size'] = self.size_var.get()
-
         categories = ['hats', 'shirts', 'pants', 'shoes', 'accessories']
         current_index = categories.index(self.category)
-
         if current_index < len(categories) - 1:
             next_category = categories[current_index + 1]
             self.controller.show_frame(f"{next_category.capitalize()}Page")
@@ -255,52 +222,35 @@ class SelectionPage(tk.Frame):
 class WelcomePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg=CustomStyle.BG_COLOR)
-
-        label = tk.Label(self,
-                        text="Welcome to Your Wardrobe!",
-                        font=(CustomStyle.FONT_FAMILY, 24),
-                        bg=CustomStyle.BG_COLOR)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        content_frame = tk.Frame(self, bg=CustomStyle.BG_COLOR)
+        content_frame.grid(row=0, column=0)
+        label = tk.Label(content_frame, text="Welcome to Your Wardrobe!", font=(CustomStyle.FONT_FAMILY, 32), bg=CustomStyle.BG_COLOR)
         label.pack(pady=40)
-
-        start_btn = tk.Button(self,
-                            text="Start Building Wardrobe",
-                            command=lambda: controller.show_frame("HatsPage"),
-                            bg=CustomStyle.BUTTON_BG,
-                            fg=CustomStyle.BUTTON_FG)
+        start_btn = tk.Button(content_frame, text="Start Building Wardrobe", command=lambda: controller.show_frame("HatsPage"), bg=CustomStyle.BUTTON_BG, fg=CustomStyle.BUTTON_FG, font=(CustomStyle.FONT_FAMILY, 14), width=20)
         start_btn.pack(pady=20)
 
 class WardrobePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg=CustomStyle.BG_COLOR)
         self.controller = controller
-
-        label = tk.Label(self,
-                        text="Your Complete Wardrobe",
-                        font=(CustomStyle.FONT_FAMILY, 18),
-                        bg=CustomStyle.BG_COLOR)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        content_frame = tk.Frame(self, bg=CustomStyle.BG_COLOR)
+        content_frame.grid(row=0, column=0)
+        label = tk.Label(content_frame, text="Your Complete Wardrobe", font=(CustomStyle.FONT_FAMILY, 24), bg=CustomStyle.BG_COLOR)
         label.pack(pady=20)
-
-        display_btn = tk.Button(self,
-                              text="Display Wardrobe",
-                              command=self.display_wardrobe,
-                              bg=CustomStyle.BUTTON_BG,
-                              fg=CustomStyle.BUTTON_FG)
+        display_btn = tk.Button(content_frame, text="Display Wardrobe", command=self.display_wardrobe, bg=CustomStyle.BUTTON_BG, fg=CustomStyle.BUTTON_FG, font=(CustomStyle.FONT_FAMILY, 12), width=15)
         display_btn.pack(pady=10)
-
-        save_btn = tk.Button(self,
-                           text="Save Wardrobe",
-                           command=self.save_wardrobe,
-                           bg=CustomStyle.BUTTON_BG,
-                           fg=CustomStyle.BUTTON_FG)
+        save_btn = tk.Button(content_frame, text="Save Wardrobe", command=self.save_wardrobe, bg=CustomStyle.BUTTON_BG, fg=CustomStyle.BUTTON_FG, font=(CustomStyle.FONT_FAMILY, 12), width=15)
         save_btn.pack(pady=10)
 
     def display_wardrobe(self):
         self.controller.screen.clear()
         selections = self.controller.selections
-
-        # Draw each selected item with offset
-        y_offsets = {'hats': 100, 'shirts': 50, 'pants': 0, 'shoes': -50, 'accessories': -100}
-
+        scale = CustomStyle.SCALE
+        y_offsets = {'hats': 100 * scale, 'shirts': 50 * scale, 'pants': 0, 'shoes': -50 * scale, 'accessories': -100 * scale}
         for item, details in selections.items():
             if details['color']:
                 t = turtle.RawTurtle(self.controller.screen)
